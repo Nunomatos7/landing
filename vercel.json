@@ -5,7 +5,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "frame-ancestors http://localhost:5173 https://memor-us.com"
+          "value": "frame-ancestors http://localhost:5173 https://memor-us.com https://www.memor-us.com https://memor-us.vercel.app"
         }
       ]
     }
