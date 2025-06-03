@@ -93,12 +93,30 @@ const scaleIn = {
   },
 };
 
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, []);
+
+  return isMobile;
+};
+
 const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeIndexAdmin, setActiveIndexAdmin] = useState(0);
   const swiperRef = useRef(null);
   const swiperRefAdmin = useRef(null);
+  const isMobile = useIsMobile();
 
   // Scroll animation hooks
   const [heroRef, heroControls, heroVariants] = useScrollAnimation();
@@ -629,9 +647,13 @@ const App = () => {
           variants={scaleIn}
           className='relative p-6 sm:p-12 rounded-xl shadow-lg mt-12 w-full max-w-[1440px] mx-auto z-10'
           style={{
-            backgroundImage: `url(${bgSlide})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
+            ...(isMobile
+              ? { backgroundColor: "#d0bdff" }
+              : {
+                  backgroundImage: `url(${bgSlide})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                }),
           }}
         >
           <Swiper
@@ -716,7 +738,8 @@ const App = () => {
           </motion.h1>
           <motion.p
             variants={itemVariants}
-            className='text-sm sm:text-lg text-[#82D5C7] max-w-lg mx-auto lg:mx-0'
+            className='text-sm sm:text-lg text-[#82D5C7] max-w-lg lg:mx-0'
+            style={{ marginLeft: "auto", marginRight: "auto" }}
           >
             View notifications, updates, achievements on your Memory Board, and
             revisit past team milestones.
@@ -755,9 +778,13 @@ const App = () => {
             variants={scaleIn}
             className='relative p-6 sm:p-12 rounded-xl shadow-lg mt-12 w-full max-w-[1440px] mx-auto z-10'
             style={{
-              backgroundImage: `url(${bgSlideAdmin})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
+              ...(isMobile
+                ? { backgroundColor: "#82d5c7" }
+                : {
+                    backgroundImage: `url(${bgSlideAdmin})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                  }),
             }}
           >
             <Swiper
