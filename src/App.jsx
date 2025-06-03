@@ -665,7 +665,7 @@ const App = () => {
           >
             {slidesContentCollab.map((slide, index) => (
               <SwiperSlide key={index}>
-                <div className='flex flex-col lg:flex-row items-center p-6 pb-0 sm:p-12 sm:pb-0 sm:pt-20'>
+                <div className='flex flex-col lg:flex-row items-center p-6 pb-0'>
                   {/* Text Section */}
                   <div className='lg:w-1/2 text-left mb-8 lg:mb-0 pr-0 sm:pr-8'>
                     {slide.title && (
@@ -798,7 +798,7 @@ const App = () => {
             >
               {slidesContentAdmin.map((slideAdmin, indexAdmin) => (
                 <SwiperSlide key={indexAdmin}>
-                  <div className='flex flex-col lg:flex-row items-center p-6 sm:p-12'>
+                  <div className='flex flex-col lg:flex-row items-center p-6'>
                     {/* Text Section */}
                     <div className='lg:w-1/2 text-left mb-8 lg:mb-0 pr-0 sm:pr-8'>
                       {slideAdmin.title && (
