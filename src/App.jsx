@@ -108,6 +108,137 @@ const App = () => {
   const [adminRef, adminControls, adminVariants] = useScrollAnimation(0.4);
   const [ctaRef, ctaControls, ctaVariants] = useScrollAnimation(0.2);
 
+  useEffect(() => {
+    let parentDomain = null;
+
+    // Listen for messages from parent
+    const handleParentMessage = (event) => {
+      if (event.data.type === "PARENT_READY") {
+        parentDomain = event.data.parentDomain;
+        console.log("Parent ready, domain:", parentDomain);
+      }
+    };
+
+    window.addEventListener("message", handleParentMessage);
+
+    // Function to notify parent of navigation changes
+    const notifyParentNavigation = () => {
+      if (parentDomain && window.parent !== window) {
+        const currentPath = window.location.pathname;
+        const currentSearch = window.location.search;
+        const currentHash = window.location.hash;
+
+        window.parent.postMessage(
+          {
+            type: "NAVIGATION_CHANGE",
+            path: currentPath,
+            search: currentSearch,
+            hash: currentHash,
+            fullUrl: window.location.href,
+          },
+          parentDomain
+        );
+      }
+    };
+
+    // Listen for popstate events (back/forward button)
+    const handlePopState = () => notifyParentNavigation();
+    window.addEventListener("popstate", handlePopState);
+
+    // Listen for pushstate/replacestate (programmatic navigation)
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    history.pushState = function (...args) {
+      originalPushState.apply(history, args);
+      setTimeout(notifyParentNavigation, 0);
+    };
+
+    history.replaceState = function (...args) {
+      originalReplaceState.apply(history, args);
+      setTimeout(notifyParentNavigation, 0);
+    };
+
+    // Intercept all link clicks
+    const handleLinkClick = (event) => {
+      const link = event.target.closest("a");
+
+      if (link && parentDomain && window.parent !== window) {
+        const href = link.href;
+        const target = link.target;
+
+        // Check if it's an external link
+        const isExternal =
+          !href.startsWith(window.location.origin) &&
+          !href.startsWith("/") &&
+          !href.startsWith("#") &&
+          !href.startsWith("?");
+
+        // Don't intercept if target="_blank" or external
+        if (target === "_blank" || isExternal) {
+          window.parent.postMessage(
+            {
+              type: "LINK_CLICK",
+              href: href,
+              isExternal: true,
+            },
+            parentDomain
+          );
+          return; // Let the default behavior happen
+        }
+
+        // For internal links, prevent default and notify parent
+        if (!isExternal) {
+          event.preventDefault();
+
+          // Update iframe URL first
+          if (href.startsWith("#") || href.startsWith("?")) {
+            // Handle hash/query changes
+            window.location.href = href;
+          } else {
+            // Handle path changes
+            const url = new URL(href, window.location.origin);
+            window.history.pushState(
+              {},
+              "",
+              url.pathname + url.search + url.hash
+            );
+          }
+
+          // Notify parent
+          window.parent.postMessage(
+            {
+              type: "LINK_CLICK",
+              href: href,
+              isExternal: false,
+            },
+            parentDomain
+          );
+        }
+      }
+    };
+
+    document.addEventListener("click", handleLinkClick);
+
+    // Initial notification when page loads
+    const handleLoad = () => {
+      setTimeout(notifyParentNavigation, 100);
+    };
+    window.addEventListener("load", handleLoad);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("message", handleParentMessage);
+      window.removeEventListener("popstate", handlePopState);
+      document.removeEventListener("click", handleLinkClick);
+      window.removeEventListener("load", handleLoad);
+
+      // Restore original history methods
+      history.pushState = originalPushState;
+      history.replaceState = originalReplaceState;
+    };
+  }, []);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
