@@ -385,13 +385,14 @@ const App = () => {
 
         {/* Navigation Links */}
         <div className='hidden sm:flex items-center space-x-6'>
-          <a
-            href='https://memor-us.com/home'
-            target='_parent'
-            className='px-4 py-2 text-sm font-semibold text-gray-900 bg-[#D0BCFE] rounded-full hover:bg-purple-300 hover:text-gray-900  transition-all duration-300 ease-in-out'
+          <button
+            className='px-4 py-2 text-sm font-semibold text-gray-900 bg-[#D0BCFE] rounded-full hover:bg-purple-300 transition-all duration-300 ease-in-out'
+            onClick={() =>
+              (window.parent.location.href = "https://memor-us.com/home")
+            }
           >
             Get Started
-          </a>
+          </button>
         </div>
 
         {/* Hamburger Menu Button (Mobile) */}
