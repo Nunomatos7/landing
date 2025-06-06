@@ -406,7 +406,7 @@ const App = () => {
           <button
             className='px-4 py-2 text-sm font-semibold text-gray-900 bg-[#D0BCFE] rounded-full hover:bg-purple-300 transition-all duration-300 ease-in-out'
             onClick={() =>
-              (window.parent.location.href = "https://memor-us.com/home")
+              (window.parent.location.href = "https://memor-us.com/app/login")
             }
           >
             Get Started
@@ -460,7 +460,7 @@ const App = () => {
           <button
             className='px-4 py-2 text-sm font-semibold text-gray-900 bg-[#D0BCFE] rounded-full hover:bg-purple-300 transition-all duration-300 ease-in-out'
             onClick={() =>
-              (window.parent.location.href = "https://memor-us.com/home")
+              (window.parent.location.href = "https://memor-us.com/app/login")
             }
           >
             Get Started
@@ -494,7 +494,7 @@ const App = () => {
           <button
             className='px-5 py-2 text-md font-semibold text-gray-900 bg-[#d0bcff] rounded-full hover:bg-purple-400 transition-all duration-300 ease-in-out'
             onClick={() =>
-              (window.parent.location.href = "https://memor-us.com/home")
+              (window.parent.location.href = "https://memor-us.com/app/login")
             }
           >
             Get Started
@@ -917,7 +917,7 @@ const App = () => {
             variants={itemVariants}
             className='mt-6 bg-[#D0BCFE] text-black font-semibold rounded-full hover:bg-[#B9A8F6] transition px-6 py-3'
             onClick={() =>
-              (window.parent.location.href = "https://memor-us.com/home")
+              (window.parent.location.href = "https://memor-us.com/app/login")
             }
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
